@@ -106,12 +106,12 @@ finally:
 
 委託先のエージェントを起動し、入力待ちになってから、タスクを `delegate` で送る
 
-Codex は `herdr agent start --kind codex` ではなく、次の `herdr pane run` で起動する。`agent start` は素の `codex` を起動するので、委託先のコマンドに Herdr の環境変数が渡らず、`reply` が失敗する。Herdr は Codex を検出するまでエージェントとして扱わないため、入力欄が出るのを待ってから名前を付ける
+Codex は `herdr agent start --kind codex` ではなく、次の `herdr pane run` で起動する。`agent start` は素の `codex` を起動するので、委託先のコマンドに Herdr の環境変数が渡らず、`reply` が失敗する。Herdr は Codex を検出するまでエージェントとして扱わないため、入力欄が出るのを待ってから名前を付ける。入力欄が出た直後はまだ検出されず、`agent rename` が `agent_not_found` で失敗するので再試行する
 
 ```bash
 herdr pane run <pane> "codex --no-daemon -c 'shell_environment_policy.inherit=\"all\"'"
 herdr pane wait-output <pane> --match "Ask Codex to do anything" --timeout 90000
-herdr agent rename <pane> <name>
+for attempt in {1..30}; do herdr agent rename <pane> <name> 2>/dev/null && break; sleep 1; done
 herdr agent wait <name> --until idle --until done --timeout 90000
 ```
 
