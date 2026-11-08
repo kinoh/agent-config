@@ -60,10 +60,10 @@ herdr worktree create --cwd <リポジトリの既存 worktree> --branch <branch
 - 作業の難しさで選ぶ。設計判断を含む作業や原因の分からない調査には上位のモデル、手順が決まっている作業や機械的な変換には軽いモデルを使う
 - 選んだモデル・effort と理由を作業記録に残す
 
-Herdr 内では、Codex は herdr-watch に同梱の `scripts/codex-herdr` で起動し、引数でモデルを渡す:
+Herdr 内では、Codex は herdr-watch skill の起動コマンドに、引数でモデルを足して起動する:
 
 ```bash
-herdr pane run <pane> "<herdr-watch のディレクトリ>/scripts/codex-herdr -m <model> -c model_reasoning_effort=<effort>"
+herdr pane run <pane> "codex --no-daemon -c 'shell_environment_policy.inherit=\"all\"' -m <model> -c model_reasoning_effort=<effort>"
 ```
 
 Codex 以外は `herdr agent start` で起動し、そのエージェントのモデル指定の引数を `--` の後に渡す
